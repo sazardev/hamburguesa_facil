@@ -179,32 +179,12 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
           ),
         ],
       ),
-      floatingActionButton: Column(
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: [
-          // Ver mi hamburguesa
-          FloatingActionButton.extended(
-            onPressed: _openSummary,
-            label: const Text('Armar'),
-            icon: const Text('🍔', style: TextStyle(fontSize: 18)),
-            backgroundColor: ThemeController.primaryPink,
-            foregroundColor: Colors.white,
-          ),
-          const SizedBox(height: 12),
-          // Random
-          RotationTransition(
-            turns: Tween(begin: 0.0, end: 1.0).animate(
-              CurvedAnimation(parent: _shuffleAnim, curve: Curves.easeInOut),
-            ),
-            child: FloatingActionButton(
-              onPressed: _randomize,
-              tooltip: 'Combinar al azar',
-              backgroundColor: ThemeController.lavender,
-              foregroundColor: Colors.white,
-              child: const Text('🎲', style: TextStyle(fontSize: 20)),
-            ),
-          ),
-        ],
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: _openSummary,
+        label: const Text('Armar'),
+        icon: const Text('🍔', style: TextStyle(fontSize: 18)),
+        backgroundColor: ThemeController.primaryPink,
+        foregroundColor: Colors.white,
       ),
     );
   }
@@ -233,6 +213,18 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
           ],
         ),
       ),
+      actions: [
+        RotationTransition(
+          turns: Tween(begin: 0.0, end: 1.0).animate(
+            CurvedAnimation(parent: _shuffleAnim, curve: Curves.easeInOut),
+          ),
+          child: IconButton(
+            icon: const Text('🎲', style: TextStyle(fontSize: 20)),
+            onPressed: _randomize,
+            tooltip: 'Combinar al azar',
+          ),
+        ),
+      ],
     );
   }
 
