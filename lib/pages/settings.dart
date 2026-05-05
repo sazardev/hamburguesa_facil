@@ -15,10 +15,7 @@ class SettingsPage extends StatelessWidget {
         title: const Text('⚙️ Configuración', style: TextStyle(fontSize: 18)),
         backgroundColor: Colors.transparent,
         elevation: 0,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () => Get.back(),
-        ),
+        automaticallyImplyLeading: false,
       ),
       backgroundColor: ThemeController.cream,
       body: SingleChildScrollView(

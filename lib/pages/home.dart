@@ -9,7 +9,6 @@ import 'package:hamburguesa_facil/components/recipecard.dart';
 import 'package:hamburguesa_facil/config/theme/theme.controller.dart';
 import 'package:hamburguesa_facil/controllers/hamburguer.controller.dart';
 import 'package:hamburguesa_facil/model/recipe.dart';
-import 'package:hamburguesa_facil/pages/settings.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -234,13 +233,6 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
           ],
         ),
       ),
-      actions: [
-        IconButton(
-          icon: const Text('⚙️', style: TextStyle(fontSize: 20)),
-          onPressed: () => Get.to(() => const SettingsPage()),
-          tooltip: 'Configuración',
-        ),
-      ],
     );
   }
 
