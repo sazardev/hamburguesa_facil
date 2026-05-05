@@ -41,7 +41,7 @@ class FavoritesPage extends StatelessWidget {
         ),
       ),
       body: Obx(() {
-        final favs = ctrl.favorites;
+        final favs = ctrl.myBurgers;
         if (favs.isEmpty) {
           return _EmptyState();
         }

@@ -57,7 +57,7 @@ class PreparationPage extends StatelessWidget {
               recipe.name,
               style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                     fontWeight: FontWeight.w800,
-              ),
+                  ),
             ),
 
             const SizedBox(height: 8),
@@ -91,7 +91,7 @@ class PreparationPage extends StatelessWidget {
             ),
             const SizedBox(height: 12),
 
-            ...recipe.ingredients.map((ing) {
+            ...recipe.ingredients.map<Widget>((ing) {
               return Padding(
                 padding: const EdgeInsets.only(bottom: 10),
                 child: Container(
@@ -99,7 +99,7 @@ class PreparationPage extends StatelessWidget {
                   decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(12),
-                    border: Border.all(color: Colors.grey[200]!),
+                    border: Border.all(color: Colors.grey.shade200),
                   ),
                   child: Row(
                     children: [
@@ -127,8 +127,9 @@ class PreparationPage extends StatelessWidget {
                       ),
                     ],
                   ),
-                );
-              }).toList(),
+                ),
+              );
+            }).toList(),
 
             const SizedBox(height: 24),
 
