@@ -105,11 +105,47 @@ class ThemeController extends GetxController {
       seedColor: primaryPink,
       brightness: Brightness.dark,
     ),
+    scaffoldBackgroundColor: const Color(0xFF1E1E1E),
     textTheme: _textTheme,
     cardTheme: CardThemeData(
       elevation: 4,
       shape: _shape,
       clipBehavior: Clip.hardEdge,
+    ),
+    appBarTheme: AppBarTheme(
+      backgroundColor: Colors.transparent,
+      elevation: 0,
+      scrolledUnderElevation: 0,
+      titleTextStyle: _textTheme.headlineMedium?.copyWith(
+        fontSize: 22,
+        fontWeight: FontWeight.w800,
+        color: Colors.white,
+      ),
+      iconTheme: const IconThemeData(color: Colors.white),
+    ),
+    floatingActionButtonTheme: const FloatingActionButtonThemeData(
+      backgroundColor: primaryPink,
+      foregroundColor: Colors.white,
+      elevation: 4,
+    ),
+    elevatedButtonTheme: ElevatedButtonThemeData(
+      style: ElevatedButton.styleFrom(
+        backgroundColor: primaryPink,
+        foregroundColor: Colors.white,
+        shape: _shape,
+        textStyle: _textTheme.labelLarge?.copyWith(fontWeight: FontWeight.w700),
+      ),
+    ),
+    chipTheme: ChipThemeData(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+      labelStyle: _textTheme.bodySmall?.copyWith(fontWeight: FontWeight.w600),
+    ),
+    navigationBarTheme: NavigationBarThemeData(
+      backgroundColor: const Color(0xFF2A2A2A),
+      indicatorColor: primaryPink.withOpacity(0.2),
+      labelTextStyle: WidgetStateProperty.all(
+        _textTheme.labelSmall?.copyWith(fontWeight: FontWeight.w700),
+      ),
     ),
   );
 
