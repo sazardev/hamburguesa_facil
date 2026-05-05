@@ -9,6 +9,7 @@ import 'package:hamburguesa_facil/components/recipecard.dart';
 import 'package:hamburguesa_facil/config/theme/theme.controller.dart';
 import 'package:hamburguesa_facil/controllers/hamburguer.controller.dart';
 import 'package:hamburguesa_facil/model/recipe.dart';
+import 'package:hamburguesa_facil/pages/settings.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -128,11 +129,8 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
             padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 0),
             sliver: SliverList(
               delegate: SliverChildListDelegate([
-                _buildFilterRow(),
-                const SizedBox(height: 8),
                 _buildSection(
                   context,
-                  label: 'Elige tu Pan',
                   emoji: '🍞',
                   color: const Color(0xFFFFD89E),
                   controller: breadsController,
@@ -144,7 +142,6 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                 ),
                 _buildSection(
                   context,
-                  label: 'Elige tu Topping',
                   emoji: '🥗',
                   color: const Color(0xFFA8EDCA),
                   controller: toppingsController,
@@ -156,7 +153,6 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                 ),
                 _buildSection(
                   context,
-                  label: 'Elige tu Carne',
                   emoji: '🥩',
                   color: const Color(0xFFFFB5B5),
                   controller: meatsController,
@@ -168,7 +164,6 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                 ),
                 _buildSection(
                   context,
-                  label: 'Elige tu Salsa',
                   emoji: '🍯',
                   color: ThemeController.lavender,
                   controller: dressingController,
@@ -179,124 +174,78 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                   delay: 240,
                 ),
                 const SizedBox(height: 16),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
-                  child: ElevatedButton.icon(
-                    onPressed: _openSummary,
-                    icon: const Text('🍔', style: TextStyle(fontSize: 20)),
-                    label: const Text('Ver mi hamburguesa',
-                        style: TextStyle(fontSize: 16)),
-                    style: ElevatedButton.styleFrom(
-                      minimumSize: const Size(double.infinity, 56),
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(30)),
-                    ),
-                  ).animate().fadeIn(delay: 320.ms).slideY(begin: 0.3, end: 0),
-                ),
-                const SizedBox(height: 100),
+                const SizedBox(height: 80),
               ]),
             ),
           ),
         ],
       ),
-      floatingActionButton: RotationTransition(
-        turns: Tween(begin: 0.0, end: 1.0).animate(
-          CurvedAnimation(parent: _shuffleAnim, curve: Curves.easeInOut),
-        ),
-        child: FloatingActionButton(
-          onPressed: _randomize,
-          tooltip: 'Combinar al azar',
-          child: const Text('🎲', style: TextStyle(fontSize: 24)),
-        ),
+      floatingActionButton: Column(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          // Ver mi hamburguesa
+          FloatingActionButton.extended(
+            onPressed: _openSummary,
+            label: const Text('Armar'),
+            icon: const Text('🍔', style: TextStyle(fontSize: 18)),
+            backgroundColor: ThemeController.primaryPink,
+            foregroundColor: Colors.white,
+          ),
+          const SizedBox(height: 12),
+          // Random
+          RotationTransition(
+            turns: Tween(begin: 0.0, end: 1.0).animate(
+              CurvedAnimation(parent: _shuffleAnim, curve: Curves.easeInOut),
+            ),
+            child: FloatingActionButton(
+              onPressed: _randomize,
+              tooltip: 'Combinar al azar',
+              backgroundColor: ThemeController.lavender,
+              foregroundColor: Colors.white,
+              child: const Text('🎲', style: TextStyle(fontSize: 20)),
+            ),
+          ),
+        ],
       ),
     );
   }
 
   Widget _buildSliverAppBar(BuildContext context) {
     return SliverAppBar(
-      expandedHeight: 120,
+      expandedHeight: 70,
       floating: true,
       snap: true,
       backgroundColor: ThemeController.cream,
       elevation: 0,
       flexibleSpace: FlexibleSpaceBar(
-        titlePadding: const EdgeInsets.only(left: 20, bottom: 16),
+        titlePadding: const EdgeInsets.only(left: 16, bottom: 12),
         title: Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            const Text('🍔', style: TextStyle(fontSize: 26)),
+            const Text('🍔', style: TextStyle(fontSize: 22)),
             const SizedBox(width: 8),
-            ShaderMask(
-              shaderCallback: (bounds) => const LinearGradient(
-                colors: [ThemeController.primaryPink, ThemeController.lavender],
-              ).createShader(bounds),
-              child: const Text(
-                'Hamburguesa Fácil',
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.w900,
-                  color: Colors.white,
-                ),
+            const Text(
+              'Hamburguesa Fácil',
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.w800,
               ),
             ),
           ],
         ),
       ),
       actions: [
-        Obx(() {
-          final ctrl = Get.find<ThemeController>();
-          return IconButton(
-            icon: Text(
-              ctrl.isDarkTheme.value ? '☀️' : '🌙',
-              style: const TextStyle(fontSize: 20),
-            ),
-            onPressed: ctrl.changeTheme,
-          );
-        }),
+        IconButton(
+          icon: const Text('⚙️', style: TextStyle(fontSize: 20)),
+          onPressed: () => Get.to(() => const SettingsPage()),
+          tooltip: 'Configuración',
+        ),
       ],
     );
   }
 
-  Widget _buildFilterRow() {
-    return Obx(() {
-      return SizedBox(
-        height: 42,
-        child: ListView(
-          scrollDirection: Axis.horizontal,
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          children: [
-            _FilterChip(
-              emoji: '🌱',
-              label: 'Vegetariano',
-              active: _ctrl.filterVegetarian.value,
-              color: const Color(0xFFA8EDCA),
-              onTap: _ctrl.toggleVegetarian,
-            ),
-            const SizedBox(width: 8),
-            _FilterChip(
-              emoji: '🌾',
-              label: 'Sin Gluten',
-              active: _ctrl.filterGlutenFree.value,
-              color: const Color(0xFFFFF0A0),
-              onTap: _ctrl.toggleGlutenFree,
-            ),
-            const SizedBox(width: 8),
-            _FilterChip(
-              emoji: '🌶️',
-              label: 'Picante',
-              active: _ctrl.filterSpicy.value,
-              color: const Color(0xFFFFD5C2),
-              onTap: _ctrl.toggleSpicy,
-            ),
-          ],
-        ),
-      );
-    });
-  }
-
   Widget _buildSection(
     BuildContext context, {
-    required String label,
     required String emoji,
     required Color color,
     required PageController controller,
@@ -318,7 +267,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 6),
             child: Row(
               children: [
                 Container(
@@ -328,7 +277,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                     color: color,
                     borderRadius: BorderRadius.circular(20),
                   ),
-                  child: Text('$emoji $label',
+                  child: Text(emoji,
                       style: const TextStyle(
                           fontWeight: FontWeight.w800, fontSize: 13)),
                 ),
@@ -365,6 +314,8 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                       back: RecipeCardBack(
                         item: item,
                         categoryColor: categoryColor,
+                        categoryEmoji: categoryEmoji,
+                        categoryLabel: categoryLabel,
                       ),
                     ),
                   );

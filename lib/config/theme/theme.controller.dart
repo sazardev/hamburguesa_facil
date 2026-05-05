@@ -14,21 +14,34 @@ class ThemeController extends GetxController {
 
   ThemeData get themeData => isDarkTheme.value ? _darkTheme : _lightTheme;
 
-  static TextTheme get _textTheme => GoogleFonts.nunitoTextTheme().copyWith(
-        displayLarge: GoogleFonts.nunito(fontWeight: FontWeight.w800),
-        displayMedium: GoogleFonts.nunito(fontWeight: FontWeight.w800),
-        headlineLarge: GoogleFonts.nunito(fontWeight: FontWeight.w800),
-        headlineMedium: GoogleFonts.nunito(fontWeight: FontWeight.w700),
-        titleLarge: GoogleFonts.nunito(fontWeight: FontWeight.w700),
-        titleMedium: GoogleFonts.nunito(fontWeight: FontWeight.w600),
-        bodyLarge: GoogleFonts.nunito(fontWeight: FontWeight.w500),
-        bodyMedium: GoogleFonts.nunito(fontWeight: FontWeight.w400),
-        labelLarge: GoogleFonts.nunito(fontWeight: FontWeight.w700),
-      );
+  static TextTheme get _textTheme {
+    final base = GoogleFonts.nunitoTextTheme();
+    return base.copyWith(
+      displayLarge: base.displayLarge!.copyWith(fontWeight: FontWeight.w800),
+      displayMedium: base.displayMedium!.copyWith(fontWeight: FontWeight.w800),
+      displaySmall: base.displaySmall!.copyWith(fontWeight: FontWeight.w800),
+      headlineLarge: base.headlineLarge!.copyWith(fontWeight: FontWeight.w800),
+      headlineMedium:
+          base.headlineMedium!.copyWith(fontWeight: FontWeight.w700),
+      headlineSmall: base.headlineSmall!.copyWith(fontWeight: FontWeight.w700),
+      titleLarge: base.titleLarge!.copyWith(fontWeight: FontWeight.w700),
+      titleMedium: base.titleMedium!.copyWith(fontWeight: FontWeight.w600),
+      titleSmall: base.titleSmall!.copyWith(fontWeight: FontWeight.w600),
+      bodyLarge: base.bodyLarge!.copyWith(fontWeight: FontWeight.w500),
+      bodyMedium: base.bodyMedium!.copyWith(fontWeight: FontWeight.w400),
+      bodySmall: base.bodySmall!.copyWith(fontWeight: FontWeight.w400),
+      labelLarge: base.labelLarge!.copyWith(fontWeight: FontWeight.w700),
+      labelMedium: base.labelMedium!.copyWith(fontWeight: FontWeight.w700),
+      labelSmall: base.labelSmall!.copyWith(fontWeight: FontWeight.w600),
+    );
+  }
 
   static final _shape = RoundedRectangleBorder(
     borderRadius: BorderRadius.circular(20),
   );
+
+  static ThemeData get lightTheme => _lightTheme;
+  static ThemeData get darkTheme => _darkTheme;
 
   static final ThemeData _lightTheme = ThemeData(
     useMaterial3: true,
@@ -53,7 +66,7 @@ class ThemeController extends GetxController {
       backgroundColor: Colors.transparent,
       elevation: 0,
       scrolledUnderElevation: 0,
-      titleTextStyle: GoogleFonts.nunito(
+      titleTextStyle: _textTheme.headlineMedium?.copyWith(
         fontSize: 22,
         fontWeight: FontWeight.w800,
         color: const Color(0xFF3D2C35),
@@ -70,18 +83,18 @@ class ThemeController extends GetxController {
         backgroundColor: primaryPink,
         foregroundColor: Colors.white,
         shape: _shape,
-        textStyle: GoogleFonts.nunito(fontWeight: FontWeight.w700),
+        textStyle: _textTheme.labelLarge?.copyWith(fontWeight: FontWeight.w700),
       ),
     ),
     chipTheme: ChipThemeData(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
-      labelStyle: GoogleFonts.nunito(fontWeight: FontWeight.w600, fontSize: 12),
+      labelStyle: _textTheme.bodySmall?.copyWith(fontWeight: FontWeight.w600),
     ),
     navigationBarTheme: NavigationBarThemeData(
       backgroundColor: Colors.white,
       indicatorColor: primaryPink.withOpacity(0.2),
       labelTextStyle: WidgetStateProperty.all(
-        GoogleFonts.nunito(fontWeight: FontWeight.w700, fontSize: 12),
+        _textTheme.labelSmall?.copyWith(fontWeight: FontWeight.w700),
       ),
     ),
   );
@@ -102,5 +115,8 @@ class ThemeController extends GetxController {
 
   void changeTheme() {
     isDarkTheme.value = !isDarkTheme.value;
+    Get.changeThemeMode(
+      isDarkTheme.value ? ThemeMode.dark : ThemeMode.light,
+    );
   }
 }

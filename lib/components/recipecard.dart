@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:hamburguesa_facil/config/theme/theme.controller.dart';
 import 'package:hamburguesa_facil/model/recipe.dart';
+import 'package:hamburguesa_facil/pages/preparation.dart';
 
 class RecipeCardFront extends StatelessWidget {
   final Recipe item;
@@ -164,13 +166,15 @@ class RecipeCardFront extends StatelessWidget {
 class RecipeCardBack extends StatelessWidget {
   final Recipe item;
   final Color categoryColor;
-  final VoidCallback? onViewRecipe;
+  final String categoryEmoji;
+  final String categoryLabel;
 
   const RecipeCardBack({
     super.key,
     required this.item,
     required this.categoryColor,
-    this.onViewRecipe,
+    required this.categoryEmoji,
+    required this.categoryLabel,
   });
 
   @override
@@ -268,6 +272,33 @@ class RecipeCardBack extends StatelessWidget {
                         ),
                       ))
                   .toList(),
+            ),
+            // Ver preparación button
+            SizedBox(
+              width: double.infinity,
+              child: ElevatedButton.icon(
+                onPressed: () {
+                  Get.to(() => PreparationPage(
+                        recipe: item,
+                        categoryEmoji: categoryEmoji,
+                        categoryLabel: categoryLabel,
+                        categoryColor: categoryColor,
+                      ));
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: categoryColor,
+                  foregroundColor: Colors.white,
+                  padding: const EdgeInsets.symmetric(vertical: 8),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                ),
+                icon: const Icon(Icons.visibility, size: 16),
+                label: const Text(
+                  'Ver preparación',
+                  style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
+                ),
+              ),
             ),
           ],
         ),

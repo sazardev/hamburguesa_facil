@@ -22,15 +22,9 @@ class MyApp extends StatelessWidget {
         Get.put(ThemeController());
         Get.put(HamburguerController());
       }),
-      builder: (context, child) {
-        return Obx(() {
-          final themeCtrl = Get.find<ThemeController>();
-          return Theme(
-            data: themeCtrl.themeData,
-            child: child!,
-          );
-        });
-      },
+      theme: ThemeController.lightTheme,
+      darkTheme: ThemeController.darkTheme,
+      themeMode: ThemeMode.light,
       home: const _Splash(),
     );
   }
@@ -52,17 +46,25 @@ class _SplashState extends State<_Splash> {
 
   Future<void> _init() async {
     final ctrl = Get.find<HamburguerController>();
-    await ctrl.loadUserPreferences();
 
-    final prefs = await SharedPreferences.getInstance();
-    final onboardingDone = prefs.getBool('onboarding_done') ?? false;
+    bool onboardingDone = false;
+    try {
+      await ctrl.loadUserPreferences();
+      final prefs = await SharedPreferences.getInstance();
+      onboardingDone = prefs.getBool('onboarding_done') ?? false;
+    } catch (_) {
+      // SharedPreferences unavailable (unsupported platform / first run)
+    }
 
     if (!mounted) return;
 
     if (onboardingDone) {
       Get.off(() => const AppShell());
     } else {
-      await prefs.setBool('onboarding_done', true);
+      try {
+        final prefs = await SharedPreferences.getInstance();
+        await prefs.setBool('onboarding_done', true);
+      } catch (_) {}
       Get.off(() => const OnboardingPage());
     }
   }

@@ -24,8 +24,8 @@ class HamburguerController extends GetxController {
   final RxBool filterGlutenFree = false.obs;
   final RxBool filterSpicy = false.obs;
 
-  // ── Favorites ──
-  final RxList<Hamburguer> favorites = <Hamburguer>[].obs;
+  // ── Mis Hamburguesas ──
+  final RxList<Hamburguer> myBurgers = <Hamburguer>[].obs;
 
   // ── Filtered lists ──
   List<Bread> get filteredBreads => _applyFilters(breads).cast<Bread>();
@@ -86,8 +86,8 @@ class HamburguerController extends GetxController {
         filteredDressings.isEmpty ? dressing.length : filteredDressings.length);
   }
 
-  // ── Favorites ──
-  bool isFavorite(Hamburguer h) => favorites.any(
+  // ── Mis Hamburguesas ──
+  bool isFavorite(Hamburguer h) => myBurgers.any(
         (f) =>
             f.bread.name == h.bread.name &&
             f.topping.name == h.topping.name &&
@@ -97,13 +97,13 @@ class HamburguerController extends GetxController {
 
   Future<void> addFavorite(Hamburguer h) async {
     if (!isFavorite(h)) {
-      favorites.add(h);
+      myBurgers.add(h);
       await _saveFavorites();
     }
   }
 
   Future<void> removeFavorite(Hamburguer h) async {
-    favorites.removeWhere(
+    myBurgers.removeWhere(
       (f) =>
           f.bread.name == h.bread.name &&
           f.topping.name == h.topping.name &&
@@ -138,17 +138,21 @@ class HamburguerController extends GetxController {
     filterVegetarian.value = vegetarian;
     filterGlutenFree.value = glutenFree;
     filterSpicy.value = spicy;
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setBool('filter_vegetarian', vegetarian);
-    await prefs.setBool('filter_gluten_free', glutenFree);
-    await prefs.setBool('filter_spicy', spicy);
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setBool('filter_vegetarian', vegetarian);
+      await prefs.setBool('filter_gluten_free', glutenFree);
+      await prefs.setBool('filter_spicy', spicy);
+    } catch (_) {}
   }
 
   Future<void> loadUserPreferences() async {
-    final prefs = await SharedPreferences.getInstance();
-    filterVegetarian.value = prefs.getBool('filter_vegetarian') ?? false;
-    filterGlutenFree.value = prefs.getBool('filter_gluten_free') ?? false;
-    filterSpicy.value = prefs.getBool('filter_spicy') ?? false;
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      filterVegetarian.value = prefs.getBool('filter_vegetarian') ?? false;
+      filterGlutenFree.value = prefs.getBool('filter_gluten_free') ?? false;
+      filterSpicy.value = prefs.getBool('filter_spicy') ?? false;
+    } catch (_) {}
     await _loadFavorites();
   }
 
@@ -176,44 +180,65 @@ class HamburguerController extends GetxController {
   }
 
   Future<void> _saveFavorites() async {
-    final prefs = await SharedPreferences.getInstance();
-    final list = favorites
-        .map((h) => json.encode({
-              'title': h.title,
-              'bread': h.bread.name,
-              'topping': h.topping.name,
-              'meat': h.meat.name,
-              'dressing': h.dressing.name,
-              'estimatedTime': h.estimatedTime,
-            }))
-        .toList();
-    await prefs.setStringList('favorites', list);
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final list = myBurgers
+          .map((h) => json.encode({
+                'title': h.title,
+                'bread': h.bread.name,
+                'topping': h.topping.name,
+                'meat': h.meat.name,
+                'dressing': h.dressing.name,
+                'estimatedTime': h.estimatedTime,
+              }))
+          .toList();
+      await prefs.setStringList('favorites', list);
+    } catch (_) {}
   }
 
   Future<void> _loadFavorites() async {
-    final prefs = await SharedPreferences.getInstance();
-    final list = prefs.getStringList('favorites') ?? [];
-    favorites.clear();
-    for (final item in list) {
-      try {
-        final map = json.decode(item) as Map<String, dynamic>;
-        final bread = breads.firstWhere((b) => b.name == map['bread'],
-            orElse: () => breads.first);
-        final topping = toppings.firstWhere((t) => t.name == map['topping'],
-            orElse: () => toppings.first);
-        final meat = meats.firstWhere((m) => m.name == map['meat'],
-            orElse: () => meats.first);
-        final dress = dressing.firstWhere((d) => d.name == map['dressing'],
-            orElse: () => dressing.first);
-        favorites.add(Hamburguer(
-          title: map['title'] as String?,
-          estimatedTime: (map['estimatedTime'] as num).toDouble(),
-          bread: bread,
-          topping: topping,
-          meat: meat,
-          dressing: dress,
-        ));
-      } catch (_) {}
-    }
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final list = prefs.getStringList('favorites') ?? [];
+      myBurgers.clear();
+      for (final item in list) {
+        try {
+          final map = json.decode(item) as Map<String, dynamic>;
+          final bread = breads.firstWhere((b) => b.name == map['bread'],
+              orElse: () => breads.first);
+          final topping = toppings.firstWhere((t) => t.name == map['topping'],
+              orElse: () => toppings.first);
+          final meat = meats.firstWhere((m) => m.name == map['meat'],
+              orElse: () => meats.first);
+          final dress = dressing.firstWhere((d) => d.name == map['dressing'],
+              orElse: () => dressing.first);
+          myBurgers.add(Hamburguer(
+            title: map['title'] as String?,
+            estimatedTime: (map['estimatedTime'] as num).toDouble(),
+            bread: bread,
+            topping: topping,
+            meat: meat,
+            dressing: dress,
+          ));
+        } catch (_) {}
+      }
+    } catch (_) {}
+  }
+
+  Future<void> clearAllData() async {
+    // Clear reactive state
+    filterVegetarian.value = false;
+    filterGlutenFree.value = false;
+    filterSpicy.value = false;
+    myBurgers.clear();
+
+    // Clear SharedPreferences
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.remove('filter_vegetarian');
+      await prefs.remove('filter_gluten_free');
+      await prefs.remove('filter_spicy');
+      await prefs.remove('favorites');
+    } catch (_) {}
   }
 }

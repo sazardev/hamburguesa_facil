@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:hamburguesa_facil/pages/favorites.dart';
 import 'package:hamburguesa_facil/pages/home.dart';
+import 'package:hamburguesa_facil/pages/my_burgers.dart';
+import 'package:hamburguesa_facil/pages/settings.dart';
 
 class AppShell extends StatefulWidget {
   const AppShell({super.key});
@@ -14,7 +15,8 @@ class _AppShellState extends State<AppShell> {
 
   static const _pages = [
     Home(),
-    FavoritesPage(),
+    MyBurgersPage(),
+    SettingsPage(),
   ];
 
   @override
@@ -29,14 +31,19 @@ class _AppShellState extends State<AppShell> {
         onDestinationSelected: (i) => setState(() => _selectedIndex = i),
         destinations: const [
           NavigationDestination(
-            icon: Text('🏠', style: TextStyle(fontSize: 22)),
-            selectedIcon: Text('🏠', style: TextStyle(fontSize: 26)),
-            label: 'Inicio',
+            icon: Text('🍔', style: TextStyle(fontSize: 22)),
+            selectedIcon: Text('🍔', style: TextStyle(fontSize: 26)),
+            label: 'Armar',
           ),
           NavigationDestination(
-            icon: Text('❤️', style: TextStyle(fontSize: 22)),
-            selectedIcon: Text('❤️', style: TextStyle(fontSize: 26)),
-            label: 'Favoritos',
+            icon: Text('📋', style: TextStyle(fontSize: 22)),
+            selectedIcon: Text('📋', style: TextStyle(fontSize: 26)),
+            label: 'Mis Burgers',
+          ),
+          NavigationDestination(
+            icon: Text('⚙️', style: TextStyle(fontSize: 22)),
+            selectedIcon: Text('⚙️', style: TextStyle(fontSize: 26)),
+            label: 'Configuración',
           ),
         ],
       ),

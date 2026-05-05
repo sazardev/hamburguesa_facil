@@ -341,3 +341,270 @@ class _AllIngredientsListState extends State<_AllIngredientsList> {
     );
   }
 }
+
+// ────────────────────────────────────────────────────────────────────────────
+// Full Page View for Burger Summary with Step-by-Step Instructions
+// ────────────────────────────────────────────────────────────────────────────
+
+class BurgerSummary extends StatelessWidget {
+  final Hamburguer hamburger;
+
+  const BurgerSummary({super.key, required this.hamburger});
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
+    return Scaffold(
+      backgroundColor: ThemeController.cream,
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        title: Text(
+          hamburger.title ?? '🍔 Mi Hamburguesa',
+          style: theme.textTheme.titleLarge?.copyWith(
+            fontWeight: FontWeight.w900,
+          ),
+        ),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () => Get.back(),
+        ),
+      ),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Time estimate
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+              decoration: BoxDecoration(
+                color: ThemeController.primaryPink.withOpacity(0.15),
+                borderRadius: BorderRadius.circular(16),
+                border: Border.all(
+                  color: ThemeController.primaryPink.withOpacity(0.3),
+                ),
+              ),
+              child: Row(
+                children: [
+                  const Text('⏱️', style: TextStyle(fontSize: 18)),
+                  const SizedBox(width: 10),
+                  Text(
+                    'Tiempo total estimado: ${hamburger.estimatedTime.toInt()} min',
+                    style: theme.textTheme.bodyMedium?.copyWith(
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 24),
+            // Pan
+            _IngredientDetailSection(
+              recipe: hamburger.bread,
+              emoji: '🍞',
+              categoryColor: const Color(0xFFFFAA5C),
+              title: 'Pan',
+            ),
+            const SizedBox(height: 20),
+            // Topping
+            _IngredientDetailSection(
+              recipe: hamburger.topping,
+              emoji: '🥗',
+              categoryColor: const Color(0xFF5BBA8A),
+              title: 'Topping',
+            ),
+            const SizedBox(height: 20),
+            // Carne
+            _IngredientDetailSection(
+              recipe: hamburger.meat,
+              emoji: '🥩',
+              categoryColor: const Color(0xFFE05555),
+              title: 'Carne',
+            ),
+            const SizedBox(height: 20),
+            // Salsa
+            _IngredientDetailSection(
+              recipe: hamburger.dressing,
+              emoji: '🍯',
+              categoryColor: ThemeController.lavender,
+              title: 'Salsa',
+            ),
+            const SizedBox(height: 32),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _IngredientDetailSection extends StatelessWidget {
+  final Recipe recipe;
+  final String emoji;
+  final Color categoryColor;
+  final String title;
+
+  const _IngredientDetailSection({
+    required this.recipe,
+    required this.emoji,
+    required this.categoryColor,
+    required this.title,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: Colors.grey[200]!),
+      ),
+      padding: const EdgeInsets.all(16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Header
+          Row(
+            children: [
+              Text(emoji, style: const TextStyle(fontSize: 24)),
+              const SizedBox(width: 10),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      title,
+                      style: theme.textTheme.titleSmall?.copyWith(
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                    Text(
+                      recipe.name,
+                      style: theme.textTheme.bodySmall?.copyWith(
+                        fontWeight: FontWeight.w600,
+                        color: categoryColor,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                decoration: BoxDecoration(
+                  color: categoryColor.withOpacity(0.2),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Text(
+                  '${recipe.estimatedTime.toInt()} min',
+                  style: TextStyle(
+                    fontSize: 11,
+                    fontWeight: FontWeight.w600,
+                    color: categoryColor,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 16),
+          // Ingredients
+          Text(
+            'Ingredientes',
+            style: theme.textTheme.titleSmall?.copyWith(
+              fontWeight: FontWeight.w700,
+              fontSize: 13,
+            ),
+          ),
+          const SizedBox(height: 10),
+          ...recipe.ingredients.map((ing) {
+            return Padding(
+              padding: const EdgeInsets.only(bottom: 8),
+              child: Row(
+                children: [
+                  Container(
+                    width: 6,
+                    height: 6,
+                    decoration: BoxDecoration(
+                      color: categoryColor,
+                      shape: BoxShape.circle,
+                    ),
+                  ),
+                  const SizedBox(width: 10),
+                  Expanded(
+                    child: Text(
+                      '${ing.name}: ${ing.quantity.toStringAsFixed(ing.quantity.toInt() == ing.quantity ? 0 : 1)} ${ing.measure}',
+                      style: theme.textTheme.bodySmall?.copyWith(
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            );
+          }).toList(),
+          const SizedBox(height: 16),
+          // Steps
+          Text(
+            'Pasos',
+            style: theme.textTheme.titleSmall?.copyWith(
+              fontWeight: FontWeight.w700,
+              fontSize: 13,
+            ),
+          ),
+          const SizedBox(height: 10),
+          ...recipe.steps.asMap().entries.map((entry) {
+            final index = entry.key + 1;
+            final step = entry.value;
+            return Padding(
+              padding: const EdgeInsets.only(bottom: 12),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    width: 28,
+                    height: 28,
+                    decoration: BoxDecoration(
+                      color: categoryColor,
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Center(
+                      child: Text(
+                        '$index',
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.w700,
+                          fontSize: 12,
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 10),
+                  Expanded(
+                    child: Container(
+                      padding: const EdgeInsets.all(10),
+                      decoration: BoxDecoration(
+                        color: categoryColor.withOpacity(0.08),
+                        borderRadius: BorderRadius.circular(8),
+                        border: Border.all(
+                          color: categoryColor.withOpacity(0.2),
+                        ),
+                      ),
+                      child: Text(
+                        step,
+                        style: theme.textTheme.bodySmall?.copyWith(
+                          height: 1.4,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            );
+          }).toList(),
+        ],
+      ),
+    );
+  }
+}
