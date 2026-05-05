@@ -1,0 +1,72 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" width="1024" height="1024">
+  <!-- Background circle -->
+  <circle cx="512" cy="512" r="512" fill="#FF8FAB"/>
+  
+  <!-- Soft shadow under burger -->
+  <ellipse cx="512" cy="760" rx="260" ry="28" fill="#d4607a" opacity="0.4"/>
+
+  <!-- ── TOP BUN ── -->
+  <!-- Main bun top shape -->
+  <ellipse cx="512" cy="370" rx="270" ry="130" fill="#FFCC80"/>
+  <!-- Bun highlight/shine -->
+  <ellipse cx="470" cy="315" rx="90" ry="40" fill="#FFE0A0" opacity="0.7"/>
+  <!-- Sesame seeds -->
+  <ellipse cx="460" cy="290" rx="18" ry="9" fill="#E8A04A" transform="rotate(-20 460 290)"/>
+  <ellipse cx="540" cy="280" rx="18" ry="9" fill="#E8A04A" transform="rotate(15 540 280)"/>
+  <ellipse cx="500" cy="265" rx="16" ry="8" fill="#E8A04A" transform="rotate(-5 500 265)"/>
+  <ellipse cx="580" cy="300" rx="15" ry="8" fill="#E8A04A" transform="rotate(25 580 300)"/>
+  <ellipse cx="420" cy="310" rx="15" ry="8" fill="#E8A04A" transform="rotate(-30 420 310)"/>
+
+  <!-- ── LETTUCE ── -->
+  <path d="M242 470 Q300 430 360 455 Q420 430 480 455 Q540 430 600 455 Q660 430 720 455 Q760 435 782 470 Q730 500 680 485 Q620 510 560 488 Q500 512 440 488 Q380 510 320 488 Q270 505 242 470Z" fill="#66BB6A"/>
+  <!-- Lettuce shine -->
+  <path d="M280 460 Q340 445 400 462" stroke="#A5D6A7" stroke-width="6" fill="none" stroke-linecap="round"/>
+
+  <!-- ── TOMATO ── -->
+  <rect x="255" y="488" width="514" height="52" rx="16" fill="#EF5350"/>
+  <!-- Tomato shine -->
+  <rect x="290" y="495" width="200" height="14" rx="7" fill="#FF8A80" opacity="0.6"/>
+  <rect x="310" y="510" width="100" height="10" rx="5" fill="#FF8A80" opacity="0.4"/>
+
+  <!-- ── CHEESE ── -->
+  <!-- Cheese with melted corners -->
+  <path d="M248 540 L776 540 L800 580 L780 610 L248 610 L220 580 Z" fill="#FDD835"/>
+  <!-- Cheese hole texture -->
+  <circle cx="380" cy="575" r="16" fill="#F9A825" opacity="0.5"/>
+  <circle cx="550" cy="565" r="12" fill="#F9A825" opacity="0.5"/>
+  <circle cx="660" cy="580" r="14" fill="#F9A825" opacity="0.5"/>
+
+  <!-- ── PATTY ── -->
+  <rect x="240" y="612" width="544" height="90" rx="22" fill="#5D4037"/>
+  <!-- Patty grill marks -->
+  <line x1="320" y1="622" x2="310" y2="692" stroke="#4E342E" stroke-width="10" stroke-linecap="round"/>
+  <line x1="420" y1="622" x2="410" y2="692" stroke="#4E342E" stroke-width="10" stroke-linecap="round"/>
+  <line x1="520" y1="622" x2="510" y2="692" stroke="#4E342E" stroke-width="10" stroke-linecap="round"/>
+  <line x1="620" y1="622" x2="610" y2="692" stroke="#4E342E" stroke-width="10" stroke-linecap="round"/>
+  <!-- Patty shine -->
+  <rect x="270" y="625" width="180" height="18" rx="9" fill="#795548" opacity="0.5"/>
+
+  <!-- ── BOTTOM BUN ── -->
+  <rect x="232" y="702" width="560" height="60" rx="30" fill="#FFCC80"/>
+  <!-- Bottom bun shine -->
+  <rect x="270" y="710" width="150" height="16" rx="8" fill="#FFE0A0" opacity="0.6"/>
+
+  <!-- ── KAWAII FACE on top bun ── -->
+  <!-- Eyes -->
+  <circle cx="455" cy="370" r="22" fill="#3D2C35"/>
+  <circle cx="569" cy="370" r="22" fill="#3D2C35"/>
+  <!-- Eye shines -->
+  <circle cx="463" cy="362" r="8" fill="white"/>
+  <circle cx="577" cy="362" r="8" fill="white"/>
+  <!-- Small cheek blushes -->
+  <ellipse cx="410" cy="400" rx="30" ry="16" fill="#FF8FAB" opacity="0.6"/>
+  <ellipse cx="614" cy="400" rx="30" ry="16" fill="#FF8FAB" opacity="0.6"/>
+  <!-- Smile -->
+  <path d="M472 405 Q512 432 552 405" stroke="#3D2C35" stroke-width="8" fill="none" stroke-linecap="round"/>
+
+  <!-- ── STAR SPARKLES ── -->
+  <text x="175" y="290" font-size="72" fill="white" opacity="0.9">✦</text>
+  <text x="810" y="320" font-size="52" fill="white" opacity="0.7">✦</text>
+  <text x="820" y="680" font-size="40" fill="white" opacity="0.6">✦</text>
+  <text x="155" y="680" font-size="48" fill="white" opacity="0.6">✦</text>
+</svg>
