@@ -1,12 +1,13 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
-import 'package:hamburguesa_facil/components/FlipCard.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_animate/flutter_animate.dart';
+import 'package:get/get.dart';
+import 'package:hamburguesa_facil/components/burger_summary.dart';
+import 'package:hamburguesa_facil/components/flipcard.dart';
 import 'package:hamburguesa_facil/components/recipecard.dart';
-import 'package:hamburguesa_facil/data/breads.dart';
-import 'package:hamburguesa_facil/data/dressing.dart';
-import 'package:hamburguesa_facil/data/meats.dart';
-import 'package:hamburguesa_facil/data/toppings.dart';
-import 'package:hamburguesa_facil/layouts/main.layout.dart';
+import 'package:hamburguesa_facil/config/theme/theme.controller.dart';
+import 'package:hamburguesa_facil/controllers/hamburguer.controller.dart';
 import 'package:hamburguesa_facil/model/recipe.dart';
 
 class Home extends StatefulWidget {
@@ -16,91 +17,444 @@ class Home extends StatefulWidget {
   State<Home> createState() => _HomeState();
 }
 
-class _HomeState extends State<Home> {
-  final PageController breadsController = PageController(initialPage: 1000);
-  final PageController toppingsController = PageController(initialPage: 1000);
-  final PageController meatsController = PageController(initialPage: 1000);
-  final PageController dressingController = PageController(initialPage: 1000);
+class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
+  late final HamburguerController _ctrl;
+
+  final PageController breadsController =
+      PageController(initialPage: 1000, viewportFraction: 0.88);
+  final PageController toppingsController =
+      PageController(initialPage: 1000, viewportFraction: 0.88);
+  final PageController meatsController =
+      PageController(initialPage: 1000, viewportFraction: 0.88);
+  final PageController dressingController =
+      PageController(initialPage: 1000, viewportFraction: 0.88);
+
+  late AnimationController _shuffleAnim;
+
+  @override
+  void initState() {
+    super.initState();
+    _ctrl = Get.find<HamburguerController>();
+    _shuffleAnim = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 600),
+    );
+
+    // Sync page controllers → controller indices
+    breadsController.addListener(() {
+      if (breadsController.hasClients) {
+        final list = _ctrl.filteredBreads;
+        final len = list.isEmpty ? 1 : list.length;
+        _ctrl.breadIndex.value = (breadsController.page?.round() ?? 1000) % len;
+      }
+    });
+    toppingsController.addListener(() {
+      if (toppingsController.hasClients) {
+        final list = _ctrl.filteredToppings;
+        final len = list.isEmpty ? 1 : list.length;
+        _ctrl.toppingIndex.value =
+            (toppingsController.page?.round() ?? 1000) % len;
+      }
+    });
+    meatsController.addListener(() {
+      if (meatsController.hasClients) {
+        final list = _ctrl.filteredMeats;
+        final len = list.isEmpty ? 1 : list.length;
+        _ctrl.meatIndex.value = (meatsController.page?.round() ?? 1000) % len;
+      }
+    });
+    dressingController.addListener(() {
+      if (dressingController.hasClients) {
+        final list = _ctrl.filteredDressings;
+        final len = list.isEmpty ? 1 : list.length;
+        _ctrl.dressingIndex.value =
+            (dressingController.page?.round() ?? 1000) % len;
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    breadsController.dispose();
+    toppingsController.dispose();
+    meatsController.dispose();
+    dressingController.dispose();
+    _shuffleAnim.dispose();
+    super.dispose();
+  }
+
+  void _randomize() {
+    HapticFeedback.mediumImpact();
+    _shuffleAnim.forward(from: 0);
+    final rng = Random();
+    final bl = _ctrl.filteredBreads.isEmpty ? 10 : _ctrl.filteredBreads.length;
+    final tl =
+        _ctrl.filteredToppings.isEmpty ? 9 : _ctrl.filteredToppings.length;
+    final ml = _ctrl.filteredMeats.isEmpty ? 12 : _ctrl.filteredMeats.length;
+    final dl =
+        _ctrl.filteredDressings.isEmpty ? 5 : _ctrl.filteredDressings.length;
+    breadsController.animateToPage(1000 + rng.nextInt(bl),
+        duration: const Duration(milliseconds: 500),
+        curve: Curves.easeInOutCubic);
+    toppingsController.animateToPage(1000 + rng.nextInt(tl),
+        duration: const Duration(milliseconds: 500),
+        curve: Curves.easeInOutCubic);
+    meatsController.animateToPage(1000 + rng.nextInt(ml),
+        duration: const Duration(milliseconds: 500),
+        curve: Curves.easeInOutCubic);
+    dressingController.animateToPage(1000 + rng.nextInt(dl),
+        duration: const Duration(milliseconds: 500),
+        curve: Curves.easeInOutCubic);
+  }
+
+  void _openSummary() {
+    HapticFeedback.lightImpact();
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (_) => const BurgerSummarySheet(),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
-    return MainLayout(
-        title: 'Hamburguesa facil',
-        floatingButton: FloatingActionButtonProps(
-            icon: const Icon(Icons.shuffle), onPressed: randomizeItems),
-        widgets: [
-          Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(10),
-            ),
-            child: Column(
-              children: [
-                buildCarousel(breads, breadsController),
-                buildCarousel(toppings, toppingsController),
-                buildCarousel(meats, meatsController),
-                buildCarousel(dressing, dressingController),
-              ],
+    return Scaffold(
+      backgroundColor: ThemeController.cream,
+      body: CustomScrollView(
+        slivers: [
+          _buildSliverAppBar(context),
+          SliverPadding(
+            padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 0),
+            sliver: SliverList(
+              delegate: SliverChildListDelegate([
+                _buildFilterRow(),
+                const SizedBox(height: 8),
+                _buildSection(
+                  context,
+                  label: 'Elige tu Pan',
+                  emoji: '🍞',
+                  color: const Color(0xFFFFD89E),
+                  controller: breadsController,
+                  itemsGetter: () => _ctrl.filteredBreads,
+                  categoryEmoji: '🍞',
+                  categoryLabel: 'Pan',
+                  categoryColor: const Color(0xFFFFAA5C),
+                  delay: 0,
+                ),
+                _buildSection(
+                  context,
+                  label: 'Elige tu Topping',
+                  emoji: '🥗',
+                  color: const Color(0xFFA8EDCA),
+                  controller: toppingsController,
+                  itemsGetter: () => _ctrl.filteredToppings,
+                  categoryEmoji: '🥗',
+                  categoryLabel: 'Topping',
+                  categoryColor: const Color(0xFF5BBA8A),
+                  delay: 80,
+                ),
+                _buildSection(
+                  context,
+                  label: 'Elige tu Carne',
+                  emoji: '🥩',
+                  color: const Color(0xFFFFB5B5),
+                  controller: meatsController,
+                  itemsGetter: () => _ctrl.filteredMeats,
+                  categoryEmoji: '🥩',
+                  categoryLabel: 'Carne',
+                  categoryColor: const Color(0xFFE05555),
+                  delay: 160,
+                ),
+                _buildSection(
+                  context,
+                  label: 'Elige tu Salsa',
+                  emoji: '🍯',
+                  color: ThemeController.lavender,
+                  controller: dressingController,
+                  itemsGetter: () => _ctrl.filteredDressings,
+                  categoryEmoji: '🍯',
+                  categoryLabel: 'Salsa',
+                  categoryColor: ThemeController.lavender,
+                  delay: 240,
+                ),
+                const SizedBox(height: 16),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: ElevatedButton.icon(
+                    onPressed: _openSummary,
+                    icon: const Text('🍔', style: TextStyle(fontSize: 20)),
+                    label: const Text('Ver mi hamburguesa',
+                        style: TextStyle(fontSize: 16)),
+                    style: ElevatedButton.styleFrom(
+                      minimumSize: const Size(double.infinity, 56),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(30)),
+                    ),
+                  ).animate().fadeIn(delay: 320.ms).slideY(begin: 0.3, end: 0),
+                ),
+                const SizedBox(height: 100),
+              ]),
             ),
           ),
-        ]);
-  }
-
-  Widget buildCarousel(List<Recipe> items, controller) {
-    return SizedBox(
-      height: 150,
-      child: PageView.builder(
-        controller: controller,
-        itemCount: null,
-        itemBuilder: (context, index) => FlipCard(
-          front: RecipeCard(
-            child: Stack(
-              children: [
-                if (items[index % items.length].image != null)
-                  Image.asset(
-                    items[index % items.length].image!,
-                    fit: BoxFit.cover,
-                  ),
-                Center(
-                  child: Text(
-                    items[index % items.length].name,
-                    textAlign: TextAlign.center,
-                  ),
-                ),
-              ],
-            ),
-          ),
-          back: RecipeCard(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  items[index % items.length].name,
-                  textAlign: TextAlign.center,
-                ),
-                Text(
-                  '${items[index % items.length].ingredients.length} ingredientes',
-                  textAlign: TextAlign.center,
-                ),
-                Text(
-                  '${items[index % items.length].estimatedTime} mins',
-                  textAlign: TextAlign.center,
-                ),
-                TextButton(
-                  onPressed: () {},
-                  child: const Text('Ver receta'),
-                )
-              ],
-            ),
-          ),
+        ],
+      ),
+      floatingActionButton: RotationTransition(
+        turns: Tween(begin: 0.0, end: 1.0).animate(
+          CurvedAnimation(parent: _shuffleAnim, curve: Curves.easeInOut),
+        ),
+        child: FloatingActionButton(
+          onPressed: _randomize,
+          tooltip: 'Combinar al azar',
+          child: const Text('🎲', style: TextStyle(fontSize: 24)),
         ),
       ),
     );
   }
 
-  void randomizeItems() {
-    breadsController.jumpToPage(1000 + Random().nextInt(breads.length));
-    toppingsController.jumpToPage(1000 + Random().nextInt(toppings.length));
-    meatsController.jumpToPage(1000 + Random().nextInt(meats.length));
-    dressingController.jumpToPage(1000 + Random().nextInt(dressing.length));
+  Widget _buildSliverAppBar(BuildContext context) {
+    return SliverAppBar(
+      expandedHeight: 120,
+      floating: true,
+      snap: true,
+      backgroundColor: ThemeController.cream,
+      elevation: 0,
+      flexibleSpace: FlexibleSpaceBar(
+        titlePadding: const EdgeInsets.only(left: 20, bottom: 16),
+        title: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            const Text('🍔', style: TextStyle(fontSize: 26)),
+            const SizedBox(width: 8),
+            ShaderMask(
+              shaderCallback: (bounds) => const LinearGradient(
+                colors: [ThemeController.primaryPink, ThemeController.lavender],
+              ).createShader(bounds),
+              child: const Text(
+                'Hamburguesa Fácil',
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.w900,
+                  color: Colors.white,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+      actions: [
+        Obx(() {
+          final ctrl = Get.find<ThemeController>();
+          return IconButton(
+            icon: Text(
+              ctrl.isDarkTheme.value ? '☀️' : '🌙',
+              style: const TextStyle(fontSize: 20),
+            ),
+            onPressed: ctrl.changeTheme,
+          );
+        }),
+      ],
+    );
+  }
+
+  Widget _buildFilterRow() {
+    return Obx(() {
+      return SizedBox(
+        height: 42,
+        child: ListView(
+          scrollDirection: Axis.horizontal,
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          children: [
+            _FilterChip(
+              emoji: '🌱',
+              label: 'Vegetariano',
+              active: _ctrl.filterVegetarian.value,
+              color: const Color(0xFFA8EDCA),
+              onTap: _ctrl.toggleVegetarian,
+            ),
+            const SizedBox(width: 8),
+            _FilterChip(
+              emoji: '🌾',
+              label: 'Sin Gluten',
+              active: _ctrl.filterGlutenFree.value,
+              color: const Color(0xFFFFF0A0),
+              onTap: _ctrl.toggleGlutenFree,
+            ),
+            const SizedBox(width: 8),
+            _FilterChip(
+              emoji: '🌶️',
+              label: 'Picante',
+              active: _ctrl.filterSpicy.value,
+              color: const Color(0xFFFFD5C2),
+              onTap: _ctrl.toggleSpicy,
+            ),
+          ],
+        ),
+      );
+    });
+  }
+
+  Widget _buildSection(
+    BuildContext context, {
+    required String label,
+    required String emoji,
+    required Color color,
+    required PageController controller,
+    required List<Recipe> Function() itemsGetter,
+    required String categoryEmoji,
+    required String categoryLabel,
+    required Color categoryColor,
+    required int delay,
+  }) {
+    return Obx(() {
+      // Read reactive state to trigger rebuild on filter change
+      _ctrl.filterVegetarian.value;
+      _ctrl.filterGlutenFree.value;
+      _ctrl.filterSpicy.value;
+
+      final items = itemsGetter();
+
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+            child: Row(
+              children: [
+                Container(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                  decoration: BoxDecoration(
+                    color: color,
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  child: Text('$emoji $label',
+                      style: const TextStyle(
+                          fontWeight: FontWeight.w800, fontSize: 13)),
+                ),
+                const Spacer(),
+                if (items.isNotEmpty)
+                  Text('${items.length} opciones',
+                      style: TextStyle(
+                          fontSize: 11,
+                          color: Colors.grey[500],
+                          fontWeight: FontWeight.w600)),
+              ],
+            ),
+          ),
+          if (items.isEmpty)
+            _emptyCategory(color)
+          else
+            SizedBox(
+              height: 200,
+              child: PageView.builder(
+                controller: controller,
+                itemCount: null,
+                itemBuilder: (context, index) {
+                  final item = items[index % items.length];
+                  return Padding(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
+                    child: FlipCard(
+                      front: RecipeCardFront(
+                        item: item,
+                        categoryEmoji: categoryEmoji,
+                        categoryLabel: categoryLabel,
+                        categoryColor: categoryColor,
+                      ),
+                      back: RecipeCardBack(
+                        item: item,
+                        categoryColor: categoryColor,
+                      ),
+                    ),
+                  );
+                },
+              ),
+            ),
+        ],
+      ).animate().fadeIn(delay: Duration(milliseconds: delay)).slideY(
+            begin: 0.15,
+            end: 0,
+            delay: Duration(milliseconds: delay),
+            duration: 400.ms,
+          );
+    });
+  }
+
+  Widget _emptyCategory(Color color) {
+    return SizedBox(
+      height: 80,
+      child: Center(
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+          decoration: BoxDecoration(
+            color: color.withOpacity(0.3),
+            borderRadius: BorderRadius.circular(20),
+          ),
+          child: const Text(
+            'No hay opciones con este filtro 😅',
+            style: TextStyle(fontWeight: FontWeight.w600),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _FilterChip extends StatelessWidget {
+  final String emoji;
+  final String label;
+  final bool active;
+  final Color color;
+  final VoidCallback onTap;
+
+  const _FilterChip({
+    required this.emoji,
+    required this.label,
+    required this.active,
+    required this.color,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 200),
+        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+        decoration: BoxDecoration(
+          color: active ? color : Colors.white,
+          borderRadius: BorderRadius.circular(30),
+          border: Border.all(
+            color: active ? color : Colors.grey.shade200,
+            width: 1.5,
+          ),
+          boxShadow: active
+              ? [
+                  BoxShadow(
+                      color: color.withOpacity(0.4),
+                      blurRadius: 8,
+                      offset: const Offset(0, 3))
+                ]
+              : [],
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(emoji, style: const TextStyle(fontSize: 14)),
+            const SizedBox(width: 6),
+            Text(
+              label,
+              style: TextStyle(
+                fontSize: 12,
+                fontWeight: FontWeight.w700,
+                color: active ? const Color(0xFF3D2C35) : Colors.grey[600],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }

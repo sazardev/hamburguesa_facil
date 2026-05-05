@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class FlipCard extends StatefulWidget {
   final Widget front;
@@ -25,19 +26,32 @@ class _FlipCardState extends State<FlipCard>
     super.initState();
 
     _controller = AnimationController(
-        vsync: this, duration: const Duration(milliseconds: 300));
-    _frontRotation = TweenSequence<double>(
-      [
-        TweenSequenceItem(tween: Tween(begin: 0, end: -pi / 2), weight: 0.5),
-        TweenSequenceItem(tween: Tween(begin: pi / 2, end: 0), weight: 0.5),
-      ],
-    ).animate(_controller);
-    _backRotation = TweenSequence<double>(
-      [
-        TweenSequenceItem(tween: Tween(begin: 0, end: pi / 2), weight: 0.5),
-        TweenSequenceItem(tween: Tween(begin: -pi / 2, end: 0), weight: 0.5),
-      ],
-    ).animate(_controller);
+        vsync: this, duration: const Duration(milliseconds: 420));
+
+    // Front: 0 → -90° (disappear), then back: 90° → 0 (appear) with elastic
+    _frontRotation = TweenSequence<double>([
+      TweenSequenceItem(
+          tween: Tween(begin: 0.0, end: -pi / 2)
+              .chain(CurveTween(curve: Curves.easeInCubic)),
+          weight: 0.45),
+      TweenSequenceItem(tween: ConstantTween(pi / 2), weight: 0.1),
+      TweenSequenceItem(
+          tween: Tween(begin: pi / 2, end: 0.0)
+              .chain(CurveTween(curve: Curves.elasticOut)),
+          weight: 0.45),
+    ]).animate(_controller);
+
+    _backRotation = TweenSequence<double>([
+      TweenSequenceItem(
+          tween: Tween(begin: 0.0, end: pi / 2)
+              .chain(CurveTween(curve: Curves.easeInCubic)),
+          weight: 0.45),
+      TweenSequenceItem(tween: ConstantTween(-pi / 2), weight: 0.1),
+      TweenSequenceItem(
+          tween: Tween(begin: -pi / 2, end: 0.0)
+              .chain(CurveTween(curve: Curves.elasticOut)),
+          weight: 0.45),
+    ]).animate(_controller);
   }
 
   @override
@@ -47,6 +61,7 @@ class _FlipCardState extends State<FlipCard>
   }
 
   void _flip() {
+    HapticFeedback.lightImpact();
     setState(() {
       _showFront = !_showFront;
     });

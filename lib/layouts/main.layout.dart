@@ -1,13 +1,58 @@
 import 'package:flutter/material.dart';
+import 'package:hamburguesa_facil/pages/favorites.dart';
+import 'package:hamburguesa_facil/pages/home.dart';
+
+class AppShell extends StatefulWidget {
+  const AppShell({super.key});
+
+  @override
+  State<AppShell> createState() => _AppShellState();
+}
+
+class _AppShellState extends State<AppShell> {
+  int _selectedIndex = 0;
+
+  static const _pages = [
+    Home(),
+    FavoritesPage(),
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: IndexedStack(
+        index: _selectedIndex,
+        children: _pages,
+      ),
+      bottomNavigationBar: NavigationBar(
+        selectedIndex: _selectedIndex,
+        onDestinationSelected: (i) => setState(() => _selectedIndex = i),
+        destinations: const [
+          NavigationDestination(
+            icon: Text('🏠', style: TextStyle(fontSize: 22)),
+            selectedIcon: Text('🏠', style: TextStyle(fontSize: 26)),
+            label: 'Inicio',
+          ),
+          NavigationDestination(
+            icon: Text('❤️', style: TextStyle(fontSize: 22)),
+            selectedIcon: Text('❤️', style: TextStyle(fontSize: 26)),
+            label: 'Favoritos',
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+// ── Legacy classes kept for build compatibility ────────────────────────────
 
 class FloatingActionButtonProps {
   final Icon icon;
   final Function() onPressed;
-
   FloatingActionButtonProps({required this.icon, required this.onPressed});
 }
 
-class MainLayout extends StatefulWidget {
+class MainLayout extends StatelessWidget {
   const MainLayout({
     super.key,
     required this.widgets,
@@ -20,15 +65,10 @@ class MainLayout extends StatefulWidget {
   final FloatingActionButtonProps? floatingButton;
 
   @override
-  State<MainLayout> createState() => _MainLayoutState();
-}
-
-class _MainLayoutState extends State<MainLayout> {
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: widget.title != null ? Text(widget.title!) : null,
+        title: title != null ? Text(title!) : null,
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -36,29 +76,14 @@ class _MainLayoutState extends State<MainLayout> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.center,
-            children: widget.widgets,
+            children: widgets,
           ),
         ),
       ),
-      bottomNavigationBar: BottomNavigationBar(items: const [
-        BottomNavigationBarItem(
-          icon: Icon(Icons.home),
-          label: 'Inicio',
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.favorite),
-          label: 'Favoritos',
-        ),
-      ]),
-      floatingActionButton: widget.floatingButton != null
+      floatingActionButton: floatingButton != null
           ? FloatingActionButton(
-              elevation: 0,
-              focusElevation: 0,
-              hoverElevation: 0,
-              disabledElevation: 0,
-              highlightElevation: 0,
-              onPressed: widget.floatingButton?.onPressed,
-              child: widget.floatingButton?.icon,
+              onPressed: floatingButton?.onPressed,
+              child: floatingButton?.icon,
             )
           : null,
     );

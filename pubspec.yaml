@@ -10,6 +10,10 @@ dependencies:
   flutter:
     sdk: flutter
   get: ^4.6.6
+  google_fonts: ^6.2.1
+  shared_preferences: ^2.3.0
+  smooth_page_indicator: ^1.1.0
+  flutter_animate: ^4.5.0
 
 dev_dependencies:
   flutter_test:

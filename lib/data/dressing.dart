@@ -5,6 +5,8 @@ final List<Dressing> dressing = [
   Dressing(
     name: 'Mayonesa de chipotle',
     estimatedTime: 15.0,
+    image: 'assets/dressing/salsa-chipotle.jpeg',
+    isSpicy: true,
     ingredients: [
       Ingredient(name: 'Mayonesa', quantity: 200.0, measure: 'g'),
       Ingredient(name: 'Chipotle en adobo', quantity: 20.0, measure: 'g'),
@@ -16,6 +18,8 @@ final List<Dressing> dressing = [
   Dressing(
     name: 'Mostaza y miel',
     estimatedTime: 10.0,
+    image: 'assets/dressing/salsa-miel.jpeg',
+    isVegetarian: true,
     ingredients: [
       Ingredient(name: 'Mostaza', quantity: 100.0, measure: 'g'),
       Ingredient(name: 'Miel', quantity: 50.0, measure: 'g'),
@@ -27,6 +31,8 @@ final List<Dressing> dressing = [
   Dressing(
     name: 'Salsa BBQ casera',
     estimatedTime: 30.0,
+    image: 'assets/dressing/salsa-bbq.jpeg',
+    isVegetarian: true,
     ingredients: [
       Ingredient(name: 'Ketchup', quantity: 200.0, measure: 'ml'),
       Ingredient(name: 'Miel', quantity: 50.0, measure: 'ml'),
@@ -41,6 +47,8 @@ final List<Dressing> dressing = [
   Dressing(
     name: 'Mayonesa de ajo (aioli)',
     estimatedTime: 15.0,
+    image: 'assets/dressing/salsa-ajo.jpeg',
+    isVegetarian: true,
     ingredients: [
       Ingredient(name: 'Mayonesa', quantity: 200.0, measure: 'g'),
       Ingredient(name: 'Ajo', quantity: 2.0, measure: 'dientes'),
@@ -52,6 +60,7 @@ final List<Dressing> dressing = [
   Dressing(
     name: 'Salsa tártara',
     estimatedTime: 20.0,
+    image: 'assets/dressing/salsa-tartara.jpeg',
     ingredients: [
       Ingredient(name: 'Mayonesa', quantity: 200.0, measure: 'g'),
       Ingredient(name: 'Pepinillos en vinagre', quantity: 50.0, measure: 'g'),

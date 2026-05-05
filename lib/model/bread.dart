@@ -7,5 +7,8 @@ class Bread extends Recipe {
     required super.ingredients,
     required super.steps,
     super.image,
+    super.isVegetarian,
+    super.isGlutenFree,
+    super.isSpicy,
   });
 }

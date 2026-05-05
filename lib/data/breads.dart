@@ -5,6 +5,7 @@ final List<Bread> breads = [
   Bread(
     name: 'Pan de ajo y perejil',
     estimatedTime: 180.0,
+    isVegetarian: true,
     ingredients: [
       Ingredient(name: 'Harina', quantity: 500.0, measure: 'g'),
       Ingredient(name: 'Agua', quantity: 300.0, measure: 'ml'),
@@ -26,6 +27,7 @@ final List<Bread> breads = [
   Bread(
     name: 'Pan de centeno',
     estimatedTime: 240.0,
+    isVegetarian: true,
     ingredients: [
       Ingredient(name: 'Harina de centeno', quantity: 500.0, measure: 'g'),
       Ingredient(name: 'Agua', quantity: 350.0, measure: 'ml'),
@@ -45,6 +47,7 @@ final List<Bread> breads = [
   Bread(
     name: 'Pan de queso cheddar',
     estimatedTime: 210.0,
+    isVegetarian: true,
     ingredients: [
       Ingredient(name: 'Harina', quantity: 500.0, measure: 'g'),
       Ingredient(name: 'Agua', quantity: 300.0, measure: 'ml'),
@@ -65,6 +68,7 @@ final List<Bread> breads = [
   Bread(
     name: 'Pan de cerveza negra',
     estimatedTime: 240.0,
+    isVegetarian: true,
     ingredients: [
       Ingredient(name: 'Harina', quantity: 500.0, measure: 'g'),
       Ingredient(name: 'Cerveza negra', quantity: 350.0, measure: 'ml'),
@@ -84,6 +88,7 @@ final List<Bread> breads = [
   Bread(
     name: 'Pan Bao',
     estimatedTime: 120.0,
+    isVegetarian: true,
     ingredients: [
       Ingredient(name: 'Harina', quantity: 500.0, measure: 'g'),
       Ingredient(name: 'Agua', quantity: 300.0, measure: 'ml'),
@@ -103,6 +108,8 @@ final List<Bread> breads = [
   Bread(
     name: 'Pan de arroz',
     estimatedTime: 60.0,
+    isVegetarian: true,
+    isGlutenFree: true,
     ingredients: [
       Ingredient(name: 'Harina de arroz', quantity: 500.0, measure: 'g'),
       Ingredient(name: 'Agua', quantity: 350.0, measure: 'ml'),
@@ -121,6 +128,7 @@ final List<Bread> breads = [
   Bread(
     name: 'Pan de remolacha',
     estimatedTime: 180.0,
+    isVegetarian: true,
     ingredients: [
       Ingredient(name: 'Harina', quantity: 500.0, measure: 'g'),
       Ingredient(
@@ -141,6 +149,7 @@ final List<Bread> breads = [
   Bread(
     name: 'Pan de espinacas',
     estimatedTime: 180.0,
+    isVegetarian: true,
     ingredients: [
       Ingredient(name: 'Harina', quantity: 500.0, measure: 'g'),
       Ingredient(
@@ -163,6 +172,7 @@ final List<Bread> breads = [
   Bread(
     name: 'Pan de cúrcuma',
     estimatedTime: 180.0,
+    isVegetarian: true,
     ingredients: [
       Ingredient(name: 'Harina', quantity: 500.0, measure: 'g'),
       Ingredient(name: 'Cúrcuma en polvo', quantity: 20.0, measure: 'g'),
@@ -182,6 +192,7 @@ final List<Bread> breads = [
   Bread(
     name: 'Pan de carbón activado',
     estimatedTime: 180.0,
+    isVegetarian: true,
     ingredients: [
       Ingredient(name: 'Harina', quantity: 500.0, measure: 'g'),
       Ingredient(

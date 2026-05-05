@@ -5,6 +5,7 @@ final List<Topping> toppings = [
   Topping(
     name: 'Tocino crujiente',
     estimatedTime: 10.0,
+    image: 'assets/toppings/tocino-crujiente.jpeg',
     ingredients: [
       Ingredient(name: 'Tocino', quantity: 200.0, measure: 'g'),
     ],
@@ -16,6 +17,8 @@ final List<Topping> toppings = [
   Topping(
     name: 'Queso cheddar derretido',
     estimatedTime: 5.0,
+    image: 'assets/toppings/queso-cheddar.jpeg',
+    isVegetarian: true,
     ingredients: [
       Ingredient(name: 'Queso cheddar', quantity: 100.0, measure: 'g'),
     ],
@@ -26,6 +29,8 @@ final List<Topping> toppings = [
   Topping(
     name: 'Aros de cebolla',
     estimatedTime: 20.0,
+    image: 'assets/toppings/ceblla-rodajas.jpeg',
+    isVegetarian: true,
     ingredients: [
       Ingredient(name: 'Cebolla', quantity: 1.0, measure: 'unidad'),
       Ingredient(name: 'Harina', quantity: 100.0, measure: 'g'),
@@ -40,6 +45,9 @@ final List<Topping> toppings = [
   Topping(
     name: 'Guacamole',
     estimatedTime: 15.0,
+    image: 'assets/toppings/guacamole.jpeg',
+    isVegetarian: true,
+    isGlutenFree: true,
     ingredients: [
       Ingredient(name: 'Aguacate', quantity: 1.0, measure: 'unidad'),
       Ingredient(name: 'Jugo de limón', quantity: 1.0, measure: 'unidad'),
@@ -53,6 +61,9 @@ final List<Topping> toppings = [
   Topping(
     name: 'Champiñones salteados',
     estimatedTime: 15.0,
+    image: 'assets/toppings/champiñones-salteados.jpeg',
+    isVegetarian: true,
+    isGlutenFree: true,
     ingredients: [
       Ingredient(name: 'Champiñones', quantity: 200.0, measure: 'g'),
       Ingredient(name: 'Aceite de oliva', quantity: 20.0, measure: 'ml'),
@@ -66,6 +77,9 @@ final List<Topping> toppings = [
   Topping(
     name: 'Cebolla caramelizada',
     estimatedTime: 40.0,
+    image: 'assets/toppings/cebolla-caramelizado.jpeg',
+    isVegetarian: true,
+    isGlutenFree: true,
     ingredients: [
       Ingredient(name: 'Cebolla', quantity: 1.0, measure: 'unidad'),
       Ingredient(name: 'Azúcar moreno', quantity: 20.0, measure: 'g'),
@@ -80,6 +94,9 @@ final List<Topping> toppings = [
   Topping(
     name: 'Pimientos asados',
     estimatedTime: 60.0,
+    image: 'assets/toppings/pimientos-asados.jpeg',
+    isVegetarian: true,
+    isGlutenFree: true,
     ingredients: [
       Ingredient(name: 'Pimientos rojos', quantity: 2.0, measure: 'unidades'),
       Ingredient(name: 'Aceite de oliva', quantity: 20.0, measure: 'ml'),
@@ -94,6 +111,9 @@ final List<Topping> toppings = [
   Topping(
     name: 'Huevo frito',
     estimatedTime: 10.0,
+    image: 'assets/toppings/huevo-frito.jpeg',
+    isVegetarian: true,
+    isGlutenFree: true,
     ingredients: [
       Ingredient(name: 'Huevo', quantity: 1.0, measure: 'unidad'),
       Ingredient(name: 'Aceite de oliva', quantity: 20.0, measure: 'ml'),
@@ -106,6 +126,9 @@ final List<Topping> toppings = [
   Topping(
     name: 'Aguacate en rodajas',
     estimatedTime: 5.0,
+    image: 'assets/toppings/aguacate.jpeg',
+    isVegetarian: true,
+    isGlutenFree: true,
     ingredients: [
       Ingredient(name: 'Aguacate', quantity: 1.0, measure: 'unidad'),
       Ingredient(name: 'Limón', quantity: 1.0, measure: 'unidad'),
